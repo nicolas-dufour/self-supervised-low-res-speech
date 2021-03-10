@@ -1,5 +1,7 @@
 from pytorch_lightning import LightningDataModule
 import os
+import glob
+import pandas as pd
 import requests
 from tqdm.notebook import tqdm
 import tarfile
@@ -14,49 +16,89 @@ class CommonVoiceDataModule(LightningDataModule):
     
     Parameters:
     -----------
-        clips_url: Download link from https://commonvoice.mozilla.org/fr/datasets. 
-            Be aware that the download link expire each 36 hours. This will allow to download the audio clips
-        labels_folder: Folder that contains the audio transcript with phonemes. 
-            If you need to replicate, get the labels from https://commonvoice.mozilla.org/fr/datasets a
-            nd use the phonemize helper function to process the labels files
+        clips_url: str
+            Download link from https://commonvoice.mozilla.org/fr/datasets. 
+            Be aware that the download link expire after some time. This will allow to download the audio clips
+        language_name: str
+            Language of the data. If phonemize = True, it need to match https://github.com/espeak-ng/espeak-ng/blob/master/docs/languages.md
+        labels_folder: str
+            Folder that contains the audio transcript
+        phonemize: bool
+            If needed, can allow to transform text data to phonemes data.
+    Attributes:
+    -----------
+        vocab: char list
+            List containing all the possible phonemes for our dataset.
     '''
-    def __init__(self, clips_url, language_name, labels_folder=None):
+    def __init__(self, clips_url, language_name, labels_folder=None, phonemize=False):
         self.clips_url = clips_url
         self.labels_folder = labels_folder
         self.language_name = language_name
-    
+        self.phonemize = phonemize
+
+        self.vocab = None
     def prepare_data(self):
-        if not os.path.isdir(f" data/{self.language_name}"):
+        if not os.path.isdir(f"data"):
+            os.mkdir('data')
+        if not os.path.isdir(f"data/{self.language_name}"):
             os.mkdir('temp')
+
             local_filename = 'temp/temp.tar'
-            with requests.get(url, stream=True) as r:
+            with requests.get(self.clips_url, stream=True) as r:
                 total_size_in_bytes= int(r.headers.get('content-length', 0))
                 block_size = 1024 #1 Kibibyte
+                print("Downloading Data")
                 progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
                 r.raise_for_status()
                 with open(local_filename, 'wb') as f:
                     for chunk in r.iter_content(chunk_size=block_size): 
-                        # If you have chunk encoded response uncomment if
-                        # and set chunk_size parameter to None.
-                        #if chunk: 
                         progress_bar.update(len(chunk))
                         f.write(chunk)
             progress_bar.close()
             os.mkdir(f"data/{self.language_name}")
             
             with tarfile.open(name='temp/temp.tar') as tar:
-                for member in tqdm(iterable=tar.getmembers(), total=len(tar.getmembers())):
-                    tar.extract(member=member)
-                            
-            os.system(f"mv temp/content/cv-corpus-6.1-2020-12-11/fr/clips data/{self.language_name}")
+                print('Untaring:')
+                for member in tqdm(iterable=tar.getmembers(), total=len(tar.getmembers()), unit='f'):
+                    tar.extract(member=member, path='temp')
+            clip_path = [y for x in os.walk('./') for y in glob.glob(os.path.join(x[0], 'clips'))]               
+            os.system(f"mv {clip_path[0]} data/{self.language_name}")
             if self.labels_folder is None:
                 os.mkdir(f"data/{self.language_name}/labels")
                 
-                os.system(f"cp temp/content/cv-corpus-6.1-2020-12-11/fr/train.tsv data/{self.language_name}/labels/")
-                os.system(f"cp temp/content/cv-corpus-6.1-2020-12-11/fr/dev.tsv data/{self.language_name}/labels/")
-                os.system(f"cp  temp/content/cv-corpus-6.1-2020-12-11/fr/test.csv data/{self.language_name}/labels/")
+                train_path = [y for x in os.walk('./temp') for y in glob.glob(os.path.join(x[0], 'train.tsv'))] 
+                os.system(f"cp {train_path[0]} data/{self.language_name}/labels/")
+                
+                
+                
+                dev_path = [y for x in os.walk('./temp') for y in glob.glob(os.path.join(x[0], 'dev.tsv'))] 
+                os.system(f"cp {dev_path[0]} data/{self.language_name}/labels/")
+                
+                test_path = [y for x in os.walk('./temp') for y in glob.glob(os.path.join(x[0], 'test.tsv'))] 
+                os.system(f"cp {test_path[0]} data/{self.language_name}/labels/")
             else:
                 os.system(f"cp -r {self.labels_folder} data/{self.language_name}/labels")
+            if self.phonemize:
+                print('Phonemizing Train set')
+                phonemize_labels(
+                    f"data/{self.language_name}/labels/train.tsv",
+                    'sentence',
+                    self.language_name
+                )
+                print('Phonemizing Dev set')
+                phonemize_labels(
+                    f"data/{self.language_name}/labels/dev.tsv",
+                    'sentence',
+                    self.language_name
+                )
+                print('Phonemizing Test set')
+                phonemize_labels(
+                    f"data/{self.language_name}/labels/test.tsv",
+                    'sentence',
+                    self.language_name
+                )
+            print('Exctracting phoneme vocab')
+            self.vocab = list(set([char for sentence in pd.read_csv("data/{self.language_name}/labels/train.tsv",sep='\t')['sentence_phonemes'] for word in re.split('(W)', sentence) for char in word]))
     
             os.system(f"rm -r temp")
             

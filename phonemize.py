@@ -20,7 +20,7 @@ def phonemize_labels(file_name, column_name, language):
     
     data = pd.read_csv(file_name,sep='\t')
     data['sentence_phonemes'] = phonemize(
-        data['sentence'],
+        data[column_name],
         language=language,
         backend = 'espeak',
         njobs = 8
