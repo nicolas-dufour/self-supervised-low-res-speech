@@ -5,10 +5,11 @@ import requests
 from tqdm.notebook import tqdm
 import tarfile
 from glob import glob
-import soundfile as sf
+import torchaudio
 
 from phonemize import phonemize_labels
 
+import torch
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import Dataset, DataLoader
 from torch.nn.utils.rnn import pad_sequence
@@ -29,23 +30,31 @@ class CommonVoiceDataModule(LightningDataModule):
             Be aware that the download link expire after some time. This will allow to download the audio clips
         language_name: str
             Language of the data. If phonemize = True, it need to match https://github.com/espeak-ng/espeak-ng/blob/master/docs/languages.md
-        labels_folder: str
+        labels_folder: str, default None
             Folder that contains the audio transcript
-        phonemize: bool
+        phonemize: bool, default False
             If needed, can allow to transform text data to phonemes data.
+        batch_size: int, default True
+            The batch_size that is given to the dataloader
+        label_type: str, default phonemes
+            Tell us if we want to have a phoneme based labelisation ('phonemes') or text based ('text')
+            
     Attributes:
     -----------
         vocab: char list
             List containing all the possible phonemes for our dataset.
     '''
-    def __init__(self, clips_url, language_name, tokenizer, labels_folder=None, phonemize=False, batch_size=64):
+    def __init__(self, clips_url, language_name, labels_folder=None, phonemize=False, label_type='phonemes',batch_size=64, num_workers = 1):
         self.clips_url = clips_url
         self.labels_folder = labels_folder
         self.language_name = language_name
-        self.tokenizer = tokenizer
+        self.tokenizer = None
         self.vocab = None
         self.phonemize = phonemize
         self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.label_type = label_type
+        self.vocab_size = None
     def prepare_data(self):
         '''
         This function download and preprocess the data from common voice
@@ -106,30 +115,46 @@ class CommonVoiceDataModule(LightningDataModule):
                     'sentence',
                     self.language_name
                 )
-            print('Exctracting phoneme vocab')
-            self.vocab = list(set([char for sentence in pd.read_csv("data/{self.language_name}/labels/train.tsv",sep='\t')['sentence_phonemes'] for char in sentence]))
-            self.tokenizer.add_tokens(self.vocab)
             os.system(f"rm -r temp")
+        print('Extracting phoneme vocab')
+        if self.label_type == 'phonemes':
+            self.vocab = list(set([char for sentence in pd.read_csv(f"data/{self.language_name}/labels/train.tsv",sep='\t')['sentence_phonemes'] for char in sentence]))
+        elif self.label_type == 'text':
+            self.vocab = list(set([char for sentence in pd.read_csv(f"data/{self.language_name}/labels/train.tsv",sep='\t')['sentence'] for char in sentence]))
+        else:
+            raise "Label type not supported"
+        self.tokenizer = PhonemeTokenizer(self.vocab)
+        self.vocab_size = len(self.vocab)+2
             
     def setup(self):
         '''
         This function create the respective datasets.
         '''
+        if self.label_type == 'phonemes':
+            label_col = 'sentence_phonemes'
+        elif self.label_type == 'text':
+            label_col = 'sentence'
+        else:
+            raise "Label type not supported"
         self.train_set = CommonVoiceDataset(
-            self.clips_url,
-             f"data/{self.language_name}/labels/train.tsv",
-              self.tokenizer
-              )
+            f"data/{self.language_name}/clips/",
+            f"data/{self.language_name}/labels/train.tsv",
+            self.tokenizer,
+            label_col = label_col
+            )
         self.val_set = CommonVoiceDataset(
-            self.clips_url,
-             f"data/{self.language_name}/labels/dev.tsv",
-              self.tokenizer
-              )
+            f"data/{self.language_name}/clips/",
+            f"data/{self.language_name}/labels/dev.tsv",
+            self.tokenizer,
+            label_col = label_col
+            )
         self.test_set = CommonVoiceDataset(
-            self.clips_url,
-             f"data/{self.language_name}/labels/test.tsv",
-              self.tokenizer
-              )
+            f"data/{self.language_name}/clips/",
+            f"data/{self.language_name}/labels/test.tsv",
+            self.tokenizer,
+            label_col = label_col
+            )
+
     def train_dataloader(self):
         '''
         This function create the train dataloaders. 
@@ -140,7 +165,8 @@ class CommonVoiceDataModule(LightningDataModule):
             batch_size = self.batch_size,
             shuffle = True,
             collate_fn = collate_common_voice_fn,
-            num_workers = 8)
+            num_workers = self.num_workers
+            )
 
     def val_dataloader(self):
         '''
@@ -150,9 +176,10 @@ class CommonVoiceDataModule(LightningDataModule):
         return DataLoader(
             self.val_set,
             batch_size = self.batch_size,
-            shuffle = True,
+            shuffle = False,
             collate_fn = collate_common_voice_fn,
-            num_workers = 8)
+            num_workers = self.num_workers
+            )
 
     def test_dataloader(self):
         '''
@@ -162,9 +189,10 @@ class CommonVoiceDataModule(LightningDataModule):
         return DataLoader(
             self.test_set,
             batch_size = self.batch_size,
-            shuffle = True,
+            shuffle = False,
             collate_fn = collate_common_voice_fn,
-            num_workers = 8)
+            num_workers = self.num_workers
+            )
 
 class CommonVoiceDataset(Dataset):
     '''
@@ -180,15 +208,16 @@ class CommonVoiceDataset(Dataset):
         tokenizer: Tokenizer
             Hugging Face tokenizer
     '''
-    def __init__(self, clips_paths, labels_path, tokenizer):
-        self.clips_paths = self.clip_path
+    def __init__(self, clips_paths, labels_path, tokenizer, label_col ='sentence_phonemes'):
+        self.clips_paths = clips_paths
         self.labels = pd.read_csv(labels_path, sep='\t')
+        self.label_col = label_col
         self.tokenizer = tokenizer
     def __getitem__(self,idx):
-        path = self.clip_path+self.labels.iloc[idx]['path']
-        speech, _ = sf.read(path)
-        label = self.labels.iloc[idx]['sentence_phonemes']
-        return self.tokenizer(speech, return_tensors="pt").input_values, self.tokenizer.encode(list(label))
+        path = self.clips_paths+self.labels.iloc[idx]['path']
+        speech, _ = torchaudio.load(path)
+        label = self.labels.iloc[idx][self.label_col]
+        return speech[0], torch.LongTensor(self.tokenizer.encode(label))
     def __len__(self):
         return len(self.labels)
 
@@ -207,4 +236,24 @@ def collate_common_voice_fn(batch):
         pad_sequence(speech_batch, batch_first=True, padding_value=0),
         pad_sequence(labels_batch, batch_first=True, padding_value=0)
     )
-
+class PhonemeTokenizer:
+    def __init__(self, vocab):
+        self.char_to_token_vocab = {**{'<pad>':0,'<unk>':1},**{char:i+2 for i, char in enumerate(vocab)}}
+        self.token_to_char_vocab = {**{'0':'<pad>','1':'<unk>'},**{str(i+2):char for i, char in enumerate(vocab)}}
+    def encode(self, sentence):
+        tokens = []
+        for char in sentence:
+            if char in self.char_to_token_vocab:
+                tokens.append(self.char_to_token_vocab[char])
+            else:
+                tokens.append(self.char_to_token_vocab[1])
+        return tokens
+    def decode(self, list_tokens):
+        output_str_list = []
+        for token in list_tokens:
+            if token!=0:
+                if str(token) in self.token_to_char_vocab:
+                    output_str_list.append(self.token_to_char_vocab[str(token)])
+                else:
+                    output_str_list.append('<unk>')
+        return ''.join(output_str_list)
