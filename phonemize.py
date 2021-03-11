@@ -23,6 +23,7 @@ def phonemize_labels(file_name, column_name, language):
         data['sentence'],
         language=language,
         backend = 'espeak',
+        language_switch = 'remove-flags'
         njobs = 8
     )
     data.to_csv(file_name, sep='\t')
