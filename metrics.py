@@ -11,4 +11,4 @@ class PER(Metrics):
             self.edit_distance += editdistance(ref_list, pred_list)
             self.target_length += len(ref_list)
     def compute(self):
-        return self.edit_distance.float() / self.target_length
+        return self.edit_distance.float() / self.target_length if self.target_length > 0 else 0
