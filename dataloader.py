@@ -28,33 +28,70 @@ class CommonVoiceDataModule(LightningDataModule):
         clips_url: str
             Download link from https://commonvoice.mozilla.org/fr/datasets. 
             Be aware that the download link expire after some time. This will allow to download the audio clips
+        
         language_name: str
             Language of the data. If phonemize = True, it need to match https://github.com/espeak-ng/espeak-ng/blob/master/docs/languages.md
+        
         labels_folder: str, default None
             Folder that contains the audio transcript
+        
         phonemize: bool, default False
             If needed, can allow to transform text data to phonemes data.
+        
         batch_size: int, default True
             The batch_size that is given to the dataloader
+        
         label_type: str, default phonemes
             Tell us if we want to have a phoneme based labelisation ('phonemes') or text based ('text')
             
     Attributes:
     -----------
+        language_name: str
+            The language of the dataset
+        
+        tokenizer: Object
+            The tokenizer function that allow to convert from char to tokens and tokens to char
+        
         vocab: char list
             List containing all the possible phonemes for our dataset.
+        
+        vocab_size: int,
+            The size of the vocab
+        
+        batch_size: int,
+            Batch size of the created dataloaders
+        
+        num_workers: int,
+            Workers in the dataloader
+        
+        label_type: str,
+            Type of labels we use. 'phonemes' for the phonetize version of the labels 
+            and 'text' for the text version.
+        
+        train_set: Pytorch Dataset,
+            The pytorch dataset for the train set
+        
+        val_set: Pytorch Dataset,
+            The pytorch dataset for the val set
+        
+        test_set: Pytorch Dataset,
+            The pytorch dataset for the test set
     '''
     def __init__(self, clips_url, language_name, labels_folder=None, phonemize=False, label_type='phonemes',batch_size=64, num_workers = 1):
-        self.clips_url = clips_url
-        self.labels_folder = labels_folder
+        self.__clips_url = clips_url
+        self.__labels_folder = labels_folder
+        self.__phonemize = phonemize
+        
         self.language_name = language_name
         self.tokenizer = None
         self.vocab = None
-        self.phonemize = phonemize
+        self.vocab_size = None
+        self.label_type = label_type
+        
+        
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.label_type = label_type
-        self.vocab_size = None
+        
     def prepare_data(self):
         '''
         This function download and preprocess the data from common voice
@@ -64,7 +101,7 @@ class CommonVoiceDataModule(LightningDataModule):
         if not os.path.isdir(f"data/{self.language_name}"):
             os.mkdir('temp')
             local_filename = 'temp/temp.tar'
-            with requests.get(self.clips_url, stream=True) as r:
+            with requests.get(self.__clips_url, stream=True) as r:
                 total_size_in_bytes= int(r.headers.get('content-length', 0))
                 block_size = 1024 #1 Kibibyte
                 print("Downloading Data")
@@ -83,7 +120,7 @@ class CommonVoiceDataModule(LightningDataModule):
                     tar.extract(member=member, path='temp')
             clip_path = [y for x in os.walk('./') for y in glob(os.path.join(x[0], 'clips'))]               
             os.system(f"mv {clip_path[0]} data/{self.language_name}")
-            if self.labels_folder is None:
+            if self.__labels_folder is None:
                 os.mkdir(f"data/{self.language_name}/labels")
                 
                 train_path = [y for x in os.walk('./temp') for y in glob(os.path.join(x[0], 'train.tsv'))] 
@@ -95,8 +132,8 @@ class CommonVoiceDataModule(LightningDataModule):
                 test_path = [y for x in os.walk('./temp') for y in glob(os.path.join(x[0], 'test.tsv'))] 
                 os.system(f"cp {test_path[0]} data/{self.language_name}/labels/")
             else:
-                os.system(f"cp -r {self.labels_folder} data/{self.language_name}/labels")
-            if self.phonemize:
+                os.system(f"cp -r {self.__labels_folder} data/{self.language_name}/labels")
+            if self.__phonemize:
                 print('Phonemizing Train set')
                 phonemize_labels(
                     f"data/{self.language_name}/labels/train.tsv",
@@ -203,8 +240,10 @@ class CommonVoiceDataset(Dataset):
     ----------
         clips_path: str
             Path for the audio clips
+        
         labels_path: str
             Path for the labels tsv
+        
         tokenizer: Tokenizer
             Hugging Face tokenizer
     '''
@@ -237,10 +276,48 @@ def collate_common_voice_fn(batch):
         pad_sequence(labels_batch, batch_first=True, padding_value=0)
     )
 class PhonemeTokenizer:
+    '''
+    Allows for encoding and decoding from char to token and token to chars
+    
+    Parameters:
+    ----------
+        vocab: list of char,
+            Contains all the characters we want to consider. 
+            We add 2 special characters, <pad> for the padding 
+            and <unk> for characters that aren't in vocab
+    
+    Attributes:
+    -----------
+        char_to_token_vocab: dict
+            Hash list to map char to token value
+        
+        token_to_char_vocab: dict
+            Hash list to map token values to char
+            
+    Methods:
+    --------
+        encode: sentence (str) -> tokens (list of int),
+            Convert sentence to list of tokens
+        
+        decode: list_tokens (list of int) -> sentence (str)
+            Convert list of tokens to sentence
+    '''
     def __init__(self, vocab):
         self.char_to_token_vocab = {**{'<pad>':0,'<unk>':1},**{char:i+2 for i, char in enumerate(vocab)}}
         self.token_to_char_vocab = {**{'0':'<pad>','1':'<unk>'},**{str(i+2):char for i, char in enumerate(vocab)}}
     def encode(self, sentence):
+        '''
+        Convert sentence to list of tokens
+        
+        Parameters:
+        ----------
+            sentence: str
+                Sentence we want to tokenize
+        Output:
+        -------
+            tokens: list of int
+                Tokenized output
+        '''
         tokens = []
         for char in sentence:
             if char in self.char_to_token_vocab:
@@ -249,6 +326,18 @@ class PhonemeTokenizer:
                 tokens.append(self.char_to_token_vocab[1])
         return tokens
     def decode(self, list_tokens):
+        '''
+        Convert list of tokens to sentence
+    
+        Parameters:
+        ----------
+            list_tokens: list of int
+                List of tokens we want to convert to str
+        Output:
+        -------
+            sentence: str
+                Decoded sentence output
+        '''
         output_str_list = []
         for token in list_tokens:
             if token!=0:
