@@ -35,11 +35,11 @@ class CommonVoiceDataModule(LightningDataModule):
         vocab: char list
             List containing all the possible phonemes for our dataset.
     '''
-    def __init__(self, clips_url, language_name, labels_folder=None, phonemize=False):
+    def __init__(self, clips_url, language_name, tokenizer, labels_folder=None, phonemize=False):
         self.clips_url = clips_url
         self.labels_folder = labels_folder
         self.language_name = language_name
-      
+        self.tokenizer = tokenizer
         self.vocab = None
         self.phonemize = phonemize
     def prepare_data(self):
@@ -101,7 +101,8 @@ class CommonVoiceDataModule(LightningDataModule):
                     self.language_name
                 )
             print('Exctracting phoneme vocab')
-            self.vocab = list(set([char for sentence in pd.read_csv("data/{self.language_name}/labels/train.tsv",sep='\t')['sentence_phonemes'] for word in re.split('(W)', sentence) for char in word]))
+            self.vocab = list(set([char for sentence in pd.read_csv("data/{self.language_name}/labels/train.tsv",sep='\t')['sentence_phonemes'] for char in sentence]))
+            self.tokenizer.add_tokens(self.vocab)
             os.system(f"rm -r temp")
             
     def setup(self):
@@ -120,7 +121,10 @@ class CommonVoiceDataset(Dataset):
         self.clips_paths = self.clip_path
         self.labels = pd.read_csv(labels_path, sep='\t')
     def __getitem__(self,idx):
-        path = self.labels.iloc[idx]['path']
-        
+        path = self.clip_path+self.labels.iloc[idx]['path']
+        speech, _ = sf.read(path)
+        label = self.labels.iloc[idx]['sentence_phonemes']
+        return speech, self.tokenizer.encode(list(label))
     def __len__(self):
         return len(self.labels)
+
