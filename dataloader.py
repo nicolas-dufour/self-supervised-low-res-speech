@@ -167,7 +167,7 @@ class CommonVoiceDataModule(LightningDataModule):
         '''
         This function create the respective datasets.
         '''
-        resample_transform = torchaudio.transforms.resample(orig_freq = 48000, new_freq =16000)
+        resample_transform = torchaudio.transforms.Resample(orig_freq = 48000, new_freq =16000)
         if self.label_type == 'phonemes':
             label_col = 'sentence_phonemes'
         elif self.label_type == 'text':
