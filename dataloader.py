@@ -167,6 +167,7 @@ class CommonVoiceDataModule(LightningDataModule):
         '''
         This function create the respective datasets.
         '''
+        resample_transform = torchaudio.transform.resample(orig_freq = 48000, new_freq =16000)
         if self.label_type == 'phonemes':
             label_col = 'sentence_phonemes'
         elif self.label_type == 'text':
@@ -177,19 +178,22 @@ class CommonVoiceDataModule(LightningDataModule):
             f"data/{self.language_name}/clips/",
             f"data/{self.language_name}/labels/train.tsv",
             self.tokenizer,
-            label_col = label_col
+            label_col = label_col,
+            transform = resample_transform
             )
         self.val_set = CommonVoiceDataset(
             f"data/{self.language_name}/clips/",
             f"data/{self.language_name}/labels/dev.tsv",
             self.tokenizer,
-            label_col = label_col
+            label_col = label_col,
+            transform = resample_transform
             )
         self.test_set = CommonVoiceDataset(
             f"data/{self.language_name}/clips/",
             f"data/{self.language_name}/labels/test.tsv",
             self.tokenizer,
-            label_col = label_col
+            label_col = label_col,
+            transform = resample_transform
             )
 
     def train_dataloader(self):
@@ -247,16 +251,22 @@ class CommonVoiceDataset(Dataset):
         tokenizer: Tokenizer
             Hugging Face tokenizer
     '''
-    def __init__(self, clips_paths, labels_path, tokenizer, label_col ='sentence_phonemes'):
+    def __init__(self, clips_paths, labels_path, tokenizer, label_col ='sentence_phonemes', transform=None):
         self.clips_paths = clips_paths
         self.labels = pd.read_csv(labels_path, sep='\t')
         self.label_col = label_col
         self.tokenizer = tokenizer
+        self.transform = transform
     def __getitem__(self,idx):
         path = self.clips_paths+self.labels.iloc[idx]['path']
-        speech, _ = torchaudio.load(path)
+        speech, freq = torchaudio.load(path)
         label = self.labels.iloc[idx][self.label_col]
-        return speech[0], torch.LongTensor(self.tokenizer.encode(label))
+        if self.transform:
+            speech = self.transform(speech[0])
+        else:
+            speech = speech[0]
+
+        return speech, torch.LongTensor(self.tokenizer.encode(label))
     def __len__(self):
         return len(self.labels)
 
