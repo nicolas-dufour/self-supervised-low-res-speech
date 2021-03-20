@@ -1,0 +1,68 @@
+
+  | Name              | Type          | Params
+----------------------------------------------------
+0 | criterion         | CTCLoss       | 0     
+1 | feature_extractor | Wav2Vec2Model | 94.4 M
+2 | lm_head           | Linear        | 36.9 K
+3 | val_per           | PER           | 0     
+4 | test_per          | PER           | 0     
+----------------------------------------------------
+94.4 M    Trainable params
+0         Non-trainable params
+94.4 M    Total params
+377.634   Total estimated model params size (MB)
+[INFO] 
+  | Name              | Type          | Params
+----------------------------------------------------
+0 | criterion         | CTCLoss       | 0     
+1 | feature_extractor | Wav2Vec2Model | 94.4 M
+2 | lm_head           | Linear        | 36.9 K
+3 | val_per           | PER           | 0     
+4 | test_per          | PER           | 0     
+----------------------------------------------------
+94.4 M    Trainable params
+0         Non-trainable params
+94.4 M    Total params
+377.634   Total estimated model params size (MB)
+Some weights of Wav2Vec2Model were not initialized from the model checkpoint at facebook/wav2vec2-base-960h and are newly initialized: ['wav2vec2.masked_spec_embed']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+GPU available: True, used: True
+[INFO] GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+[INFO] TPU available: None, using: 0 TPU cores
+
+  | Name              | Type          | Params
+----------------------------------------------------
+0 | criterion         | CTCLoss       | 0     
+1 | feature_extractor | Wav2Vec2Model | 94.4 M
+2 | lm_head           | Linear        | 36.9 K
+3 | val_per           | PER           | 0     
+4 | test_per          | PER           | 0     
+----------------------------------------------------
+94.4 M    Trainable params
+0         Non-trainable params
+94.4 M    Total params
+377.634   Total estimated model params size (MB)
+[INFO] 
+  | Name              | Type          | Params
+----------------------------------------------------
+0 | criterion         | CTCLoss       | 0     
+1 | feature_extractor | Wav2Vec2Model | 94.4 M
+2 | lm_head           | Linear        | 36.9 K
+3 | val_per           | PER           | 0     
+4 | test_per          | PER           | 0     
+----------------------------------------------------
+94.4 M    Trainable params
+0         Non-trainable params
+94.4 M    Total params
+377.634   Total estimated model params size (MB)
+targets_list: [19, 34, 31, 36, 27, 2, 34, 27, 6, 4, 12, 34, 4, 9, 19, 30, 34, 4]
+Pred_list: [44, 29, 5, 28, 26, 5, 26, 28, 15, 5, 28, 9, 5, 36, 15, 26, 17, 15, 45, 24, 29, 26, 5, 45, 26, 8, 25, 15, 26, 5, 26, 36, 47, 28, 9, 5, 9, 26, 9, 15, 5, 26, 28, 18, 28, 9, 31, 28, 5, 29, 44, 29, 44, 29]
+targets_list: [19, 34, 31, 36, 27, 2, 34, 27, 6, 4, 12, 34, 4, 9, 19, 30, 34, 4]
+Pred_list: [44, 29, 5, 28, 26, 5, 26, 28, 15, 5, 28, 9, 5, 36, 15, 26, 17, 15, 45, 24, 29, 26, 5, 45, 26, 8, 25, 15, 26, 5, 26, 36, 47, 28, 9, 5, 9, 26, 9, 15, 5, 26, 28, 18, 28, 9, 31, 28, 5, 29, 44, 29, 44, 29]
+targets_list: [6, 10, 31, 9, 27, 4, 27, 6, 5, 34, 4, 31, 34, 23, 2, 27, 32, 6, 5, 9, 4, 33, 34, 35, 31, 6, 26, 12, 2, 4, 33, 34, 35, 9, 8, 34, 5, 4, 2, 4, 21, 34, 27, 2, 30, 2, 27, 27, 34, 4, 19, 34, 30, 34, 21, 9, 4]
+Pred_list: [44, 5, 44, 5, 44, 5, 44, 5, 29, 44, 5, 26, 29, 44, 26, 28, 26, 5, 26, 1, 15, 5, 15, 5, 31, 18, 28, 9, 29, 26, 36, 47, 45, 29, 26, 29, 26, 9, 29, 9, 24, 39, 26, 44, 26, 44, 26, 18, 26, 24, 26, 39, 38, 28, 15, 28, 2, 5, 29, 39, 42, 19, 26, 18, 5, 9, 5, 26, 39, 28, 26, 28, 43, 5, 26, 36, 26, 44, 5, 26, 2, 26, 44, 36, 26, 5, 14, 5, 2, 26, 44, 26, 29, 36, 15, 28, 43, 5, 26, 17, 15, 5, 24, 26, 36, 18, 10, 5, 34, 5, 24, 2, 29, 33, 39, 28, 15, 5, 9, 26, 45, 26, 9, 26, 28, 15, 24, 2, 41, 45, 5, 15, 5, 28, 2, 5, 26, 17, 26, 9, 5, 26, 41, 45, 26, 5, 29, 26, 14, 15, 5, 9, 5, 26, 28, 26, 28, 43, 15, 5, 15, 5, 15, 9, 29, 26, 5, 44, 5, 44, 5, 44, 5, 44, 5, 44, 5, 44, 5]
+targets_list: [6, 10, 31, 9, 27, 4, 27, 6, 5, 34, 4, 31, 34, 23, 2, 27, 32, 6, 5, 9, 4, 33, 34, 35, 31, 6, 26, 12, 2, 4, 33, 34, 35, 9, 8, 34, 5, 4, 2, 4, 21, 34, 27, 2, 30, 2, 27, 27, 34, 4, 19, 34, 30, 34, 21, 9, 4]
+Pred_list: [44, 5, 44, 5, 44, 5, 44, 5, 29, 44, 5, 26, 29, 44, 26, 28, 26, 5, 26, 1, 15, 5, 15, 5, 31, 18, 28, 9, 29, 26, 36, 47, 45, 29, 26, 29, 26, 9, 29, 9, 24, 39, 26, 44, 26, 44, 26, 18, 26, 24, 26, 39, 38, 28, 15, 28, 2, 5, 29, 39, 42, 19, 26, 18, 5, 9, 5, 26, 39, 28, 26, 28, 43, 5, 26, 36, 26, 44, 5, 26, 2, 26, 44, 36, 26, 5, 14, 5, 2, 26, 44, 26, 29, 36, 15, 28, 43, 5, 26, 17, 15, 5, 24, 26, 36, 18, 10, 5, 34, 5, 24, 2, 29, 33, 39, 28, 15, 5, 9, 26, 45, 26, 9, 26, 28, 15, 24, 2, 41, 45, 5, 15, 5, 28, 2, 5, 26, 17, 26, 9, 5, 26, 41, 45, 26, 5, 29, 26, 14, 15, 5, 9, 5, 26, 28, 26, 28, 43, 15, 5, 15, 5, 15, 9, 29, 26, 5, 44, 5, 44, 5, 44, 5, 44, 5, 44, 5, 44, 5]
+/usr/local/lib/python3.7/dist-packages/pytorch_lightning/utilities/distributed.py:51: UserWarning: Detected KeyboardInterrupt, attempting graceful shutdown...
+  warnings.warn(*args, **kwargs)

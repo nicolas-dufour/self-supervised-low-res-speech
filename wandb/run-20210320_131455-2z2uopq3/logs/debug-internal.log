@@ -1,0 +1,83 @@
+2021-03-20 13:14:56,320 INFO    MainThread:12548 [internal.py:wandb_internal():91] W&B internal server running at pid: 12548, started at: 2021-03-20 13:14:56.319772
+2021-03-20 13:14:56,322 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: check_version
+2021-03-20 13:14:56,322 DEBUG   SenderThread:12548 [sender.py:send():161] send: header
+2021-03-20 13:14:56,322 INFO    WriterThread:12548 [datastore.py:open_for_write():77] open: /content/self-unsupervised-low-res-speech/wandb/run-20210320_131455-2z2uopq3/run-2z2uopq3.wandb
+2021-03-20 13:14:56,323 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:14:56,323 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: check_version
+2021-03-20 13:14:56,360 DEBUG   SenderThread:12548 [sender.py:send():161] send: run
+2021-03-20 13:14:56,362 INFO    SenderThread:12548 [sender.py:_maybe_setup_resume():352] checking resume status for None/ASR Project/2z2uopq3
+2021-03-20 13:14:56,664 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: run_start
+2021-03-20 13:14:56,665 INFO    SenderThread:12548 [sender.py:_start_run_threads():638] run started: 2z2uopq3 with start time 1616246095
+2021-03-20 13:14:56,665 DEBUG   SenderThread:12548 [sender.py:send():161] send: summary
+2021-03-20 13:14:56,666 INFO    SenderThread:12548 [sender.py:_save_file():769] saving file wandb-summary.json with policy end
+2021-03-20 13:14:58,222 DEBUG   HandlerThread:12548 [meta.py:__init__():34] meta init
+2021-03-20 13:14:58,222 DEBUG   HandlerThread:12548 [meta.py:__init__():48] meta init done
+2021-03-20 13:14:58,222 DEBUG   HandlerThread:12548 [meta.py:probe():190] probe
+2021-03-20 13:14:58,229 DEBUG   HandlerThread:12548 [meta.py:_setup_git():180] setup git
+2021-03-20 13:14:58,249 DEBUG   HandlerThread:12548 [meta.py:_setup_git():187] setup git done
+2021-03-20 13:14:58,250 DEBUG   HandlerThread:12548 [meta.py:_save_pip():52] save pip
+2021-03-20 13:14:58,250 DEBUG   HandlerThread:12548 [meta.py:_save_pip():66] save pip done
+2021-03-20 13:14:58,251 DEBUG   HandlerThread:12548 [meta.py:probe():231] probe done
+2021-03-20 13:14:58,253 DEBUG   SenderThread:12548 [sender.py:send():161] send: files
+2021-03-20 13:14:58,253 INFO    SenderThread:12548 [sender.py:_save_file():769] saving file wandb-metadata.json with policy now
+2021-03-20 13:14:58,268 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: status
+2021-03-20 13:14:58,269 DEBUG   SenderThread:12548 [sender.py:send():161] send: config
+2021-03-20 13:14:58,475 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:14:58,475 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: status
+2021-03-20 13:14:59,001 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: pause
+2021-03-20 13:14:59,001 INFO    HandlerThread:12548 [handler.py:handle_request_pause():425] stopping system metrics thread
+2021-03-20 13:14:59,045 DEBUG   SenderThread:12548 [sender.py:send():161] send: stats
+2021-03-20 13:15:13,720 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: status
+2021-03-20 13:15:13,720 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:15:13,720 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: status
+2021-03-20 13:15:28,852 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: status
+2021-03-20 13:15:28,853 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:15:28,853 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: status
+2021-03-20 13:15:43,985 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: status
+2021-03-20 13:15:43,985 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:15:43,986 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: status
+2021-03-20 13:15:51,867 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: resume
+2021-03-20 13:15:51,867 INFO    HandlerThread:12548 [handler.py:handle_request_resume():420] starting system metrics thread
+2021-03-20 13:15:54,225 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: pause
+2021-03-20 13:15:54,225 INFO    HandlerThread:12548 [handler.py:handle_request_pause():425] stopping system metrics thread
+2021-03-20 13:15:54,286 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: resume
+2021-03-20 13:15:54,286 INFO    HandlerThread:12548 [handler.py:handle_request_resume():420] starting system metrics thread
+2021-03-20 13:15:54,287 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: pause
+2021-03-20 13:15:54,287 INFO    HandlerThread:12548 [handler.py:handle_request_pause():425] stopping system metrics thread
+2021-03-20 13:15:54,294 DEBUG   SenderThread:12548 [sender.py:send():161] send: stats
+2021-03-20 13:15:54,294 DEBUG   SenderThread:12548 [sender.py:send():161] send: stats
+2021-03-20 13:15:54,298 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: resume
+2021-03-20 13:15:54,298 INFO    HandlerThread:12548 [handler.py:handle_request_resume():420] starting system metrics thread
+2021-03-20 13:15:54,446 DEBUG   SenderThread:12548 [sender.py:send():161] send: config
+2021-03-20 13:15:59,124 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: status
+2021-03-20 13:15:59,124 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:15:59,125 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: status
+2021-03-20 13:16:01,819 DEBUG   SenderThread:12548 [sender.py:send():161] send: history
+2021-03-20 13:16:01,820 DEBUG   SenderThread:12548 [sender.py:send():161] send: summary
+2021-03-20 13:16:01,820 INFO    SenderThread:12548 [sender.py:_save_file():769] saving file wandb-summary.json with policy end
+2021-03-20 13:16:08,723 DEBUG   SenderThread:12548 [sender.py:send():161] send: history
+2021-03-20 13:16:08,723 DEBUG   SenderThread:12548 [sender.py:send():161] send: summary
+2021-03-20 13:16:08,724 INFO    SenderThread:12548 [sender.py:_save_file():769] saving file wandb-summary.json with policy end
+2021-03-20 13:16:14,268 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: status
+2021-03-20 13:16:14,269 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:16:14,269 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: status
+2021-03-20 13:16:15,654 DEBUG   SenderThread:12548 [sender.py:send():161] send: history
+2021-03-20 13:16:15,654 DEBUG   SenderThread:12548 [sender.py:send():161] send: summary
+2021-03-20 13:16:15,655 INFO    SenderThread:12548 [sender.py:_save_file():769] saving file wandb-summary.json with policy end
+2021-03-20 13:16:22,462 DEBUG   SenderThread:12548 [sender.py:send():161] send: stats
+2021-03-20 13:16:22,779 DEBUG   SenderThread:12548 [sender.py:send():161] send: history
+2021-03-20 13:16:22,779 DEBUG   SenderThread:12548 [sender.py:send():161] send: summary
+2021-03-20 13:16:22,781 INFO    SenderThread:12548 [sender.py:_save_file():769] saving file wandb-summary.json with policy end
+2021-03-20 13:16:28,464 WARNING MainThread:12548 [internal.py:wandb_internal():146] Internal process interrupt: 1
+2021-03-20 13:16:28,530 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: pause
+2021-03-20 13:16:28,530 INFO    HandlerThread:12548 [handler.py:handle_request_pause():425] stopping system metrics thread
+2021-03-20 13:16:28,601 DEBUG   SenderThread:12548 [sender.py:send():161] send: stats
+2021-03-20 13:16:29,409 DEBUG   HandlerThread:12548 [handler.py:handle_request():101] handle_request: status
+2021-03-20 13:16:29,410 DEBUG   SenderThread:12548 [sender.py:send():161] send: request
+2021-03-20 13:16:29,410 DEBUG   SenderThread:12548 [sender.py:send_request():170] send_request: status
+2021-03-20 13:16:31,562 WARNING MainThread:12548 [internal.py:wandb_internal():146] Internal process interrupt: 2
+2021-03-20 13:16:31,563 ERROR   MainThread:12548 [internal.py:wandb_internal():149] Internal process interrupted.
+2021-03-20 13:16:31,602 INFO    WriterThread:12548 [datastore.py:close():258] close: /content/self-unsupervised-low-res-speech/wandb/run-20210320_131455-2z2uopq3/run-2z2uopq3.wandb
+2021-03-20 13:16:32,413 INFO    HandlerThread:12548 [handler.py:finish():535] shutting down handler
+2021-03-20 13:16:32,540 INFO    SenderThread:12548 [sender.py:finish():872] shutting down sender
+2021-03-20 13:16:33,992 INFO    MainThread:12548 [internal.py:handle_exit():78] Internal process exited
