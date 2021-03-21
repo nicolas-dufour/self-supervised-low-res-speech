@@ -1,0 +1,96 @@
+
+  | Name      | Type          | Params
+--------------------------------------------
+0 | criterion | CTCLoss       | 0     
+1 | wav2vec2  | Wav2Vec2Model | 315 M 
+2 | lm_head   | Linear        | 46.1 K
+3 | val_per   | PER           | 0     
+4 | test_per  | PER           | 0     
+--------------------------------------------
+311 M     Trainable params
+4.2 M     Non-trainable params
+315 M     Total params
+1,261.939 Total estimated model params size (MB)
+[INFO] 
+  | Name      | Type          | Params
+--------------------------------------------
+0 | criterion | CTCLoss       | 0     
+1 | wav2vec2  | Wav2Vec2Model | 315 M 
+2 | lm_head   | Linear        | 46.1 K
+3 | val_per   | PER           | 0     
+4 | test_per  | PER           | 0     
+--------------------------------------------
+311 M     Trainable params
+4.2 M     Non-trainable params
+315 M     Total params
+1,261.939 Total estimated model params size (MB)
+/usr/local/lib/python3.7/dist-packages/pytorch_lightning/utilities/distributed.py:51: UserWarning: The dataloader, val dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 4 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  warnings.warn(*args, **kwargs)
+GPU available: True, used: True
+[INFO] GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+[INFO] TPU available: None, using: 0 TPU cores
+
+  | Name      | Type          | Params
+--------------------------------------------
+0 | criterion | CTCLoss       | 0     
+1 | wav2vec2  | Wav2Vec2Model | 315 M 
+2 | lm_head   | Linear        | 46.1 K
+3 | val_per   | PER           | 0     
+4 | test_per  | PER           | 0     
+--------------------------------------------
+311 M     Trainable params
+4.2 M     Non-trainable params
+315 M     Total params
+1,261.939 Total estimated model params size (MB)
+[INFO] 
+  | Name      | Type          | Params
+--------------------------------------------
+0 | criterion | CTCLoss       | 0     
+1 | wav2vec2  | Wav2Vec2Model | 315 M 
+2 | lm_head   | Linear        | 46.1 K
+3 | val_per   | PER           | 0     
+4 | test_per  | PER           | 0     
+--------------------------------------------
+311 M     Trainable params
+4.2 M     Non-trainable params
+315 M     Total params
+1,261.939 Total estimated model params size (MB)
+/usr/local/lib/python3.7/dist-packages/pytorch_lightning/utilities/distributed.py:51: UserWarning: The dataloader, val dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 4 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  warnings.warn(*args, **kwargs)
+GPU available: True, used: True
+[INFO] GPU available: True, used: True
+TPU available: None, using: 0 TPU cores
+[INFO] TPU available: None, using: 0 TPU cores
+
+  | Name      | Type          | Params
+--------------------------------------------
+0 | criterion | CTCLoss       | 0     
+1 | wav2vec2  | Wav2Vec2Model | 315 M 
+2 | lm_head   | Linear        | 46.1 K
+3 | val_per   | PER           | 0     
+4 | test_per  | PER           | 0     
+--------------------------------------------
+311 M     Trainable params
+4.2 M     Non-trainable params
+315 M     Total params
+1,261.939 Total estimated model params size (MB)
+[INFO] 
+  | Name      | Type          | Params
+--------------------------------------------
+0 | criterion | CTCLoss       | 0     
+1 | wav2vec2  | Wav2Vec2Model | 315 M 
+2 | lm_head   | Linear        | 46.1 K
+3 | val_per   | PER           | 0     
+4 | test_per  | PER           | 0     
+--------------------------------------------
+311 M     Trainable params
+4.2 M     Non-trainable params
+315 M     Total params
+1,261.939 Total estimated model params size (MB)
+/usr/local/lib/python3.7/dist-packages/pytorch_lightning/utilities/distributed.py:51: UserWarning: The dataloader, val dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 4 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  warnings.warn(*args, **kwargs)
+/usr/local/lib/python3.7/dist-packages/pytorch_lightning/utilities/distributed.py:51: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 4 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  warnings.warn(*args, **kwargs)
+/usr/local/lib/python3.7/dist-packages/pytorch_lightning/utilities/distributed.py:51: UserWarning: Detected KeyboardInterrupt, attempting graceful shutdown...
+  warnings.warn(*args, **kwargs)

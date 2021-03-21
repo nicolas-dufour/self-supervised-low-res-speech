@@ -266,7 +266,7 @@ class CommonVoiceDataset(Dataset):
         else:
             speech = speech[0]
 
-        return speech, torch.LongTensor(self.tokenizer.encode(label))
+        return speech, torch.ones_like(speech), torch.LongTensor(self.tokenizer.encode(label))
     def __len__(self):
         return len(self.labels)
 
@@ -275,14 +275,17 @@ def collate_common_voice_fn(batch):
     Collate function that implement dynamic padding.
     '''
     speech_batch = list()
+    attention_mask  = list()
     labels_batch = list()
 
     for item in batch:
         speech_batch.append(item[0])
-        labels_batch.append(item[1])
+        attention_mask.append(item[1])
+        labels_batch.append(item[2])
     
     return(
         pad_sequence(speech_batch, batch_first=True, padding_value=0),
+        pad_sequence(attention_mask, batch_first=True, padding_value=0),
         pad_sequence(labels_batch, batch_first=True, padding_value=0)
     )
 class PhonemeTokenizer:
