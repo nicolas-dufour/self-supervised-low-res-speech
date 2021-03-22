@@ -1,0 +1,26 @@
+{
+    "os": "Linux-4.19.112+-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.7.10",
+    "heartbeatAt": "2021-03-22T01:14:34.167691",
+    "startedAt": "2021-03-22T01:14:31.588251",
+    "docker": null,
+    "gpu": "Tesla V100-SXM2-16GB",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": "11.0.228",
+    "args": [
+        "-f",
+        "/root/.local/share/jupyter/runtime/kernel-bf6133c2-45c7-45fe-b876-496fc9f089da.json"
+    ],
+    "state": "running",
+    "program": "ASR_project.ipynb",
+    "root": "/content/self-unsupervised-low-res-speech",
+    "git": {
+        "remote": "https://nicolas-dufour:@github.com/nicolas-dufour/self-unsupervised-low-res-speech.git",
+        "commit": "e8ee037710fbbc0f58cbc378d5403088e6690014"
+    },
+    "email": null,
+    "host": "599f4da7a890",
+    "username": "root",
+    "executable": "/usr/bin/python3"
+}

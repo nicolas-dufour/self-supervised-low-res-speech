@@ -336,7 +336,7 @@ class PhonemeTokenizer:
             if char in self.char_to_token_vocab:
                 tokens.append(self.char_to_token_vocab[char])
             else:
-                tokens.append(self.char_to_token_vocab[1])
+                tokens.append(1)
         return tokens
     def decode(self, list_tokens):
         '''
